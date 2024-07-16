@@ -3,9 +3,12 @@
 set -euo pipefail
 
 # TODO: Ensure this is the correct GitHub homepage where releases can be downloaded for vssh.
-GH_REPO="https://github.com/isometry/vault-ssh-plus"
+REPO_NAME="vault-ssh-plus"
+GH_REPO="https://github.com/isometry/$REPO_NAME"
 TOOL_NAME="vssh"
 TOOL_TEST="vssh --version"
+TOOL_OS=$(uname -o | tr '[:upper:]' '[:lower:]' | sed -e 's#gnu/linux#linux#g')
+TOOL_ARCH=$(uname -m | tr '[:upper:]' '[:lower:]' | sed -e 's#i386#386#g' -e 's#x86_64#amd64#g')
 
 fail() {
 	echo -e "asdf-$TOOL_NAME: $*"
@@ -42,7 +45,7 @@ download_release() {
 	filename="$2"
 
 	# TODO: Adapt the release URL convention for vssh
-	url="$GH_REPO/archive/v${version}.tar.gz"
+	url="$GH_REPO/releases/download/v${version}/${REPO_NAME}_${version}_${TOOL_OS}_${TOOL_ARCH}.zip"
 
 	echo "* Downloading $TOOL_NAME release $version..."
 	curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
